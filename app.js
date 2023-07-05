@@ -9,18 +9,19 @@ colors.setTheme({
   error: "red",
 });
 
-dotenv.config({ path: "./config/config.env" });
-const connectDB = require("./config/conn.js");
+dotenv.config({ path: "./src/config/config.env" });
+const connectDB = require("./src/config/conn.js");
 connectDB();
 
 const app = express();
 
-const contactsRouter = require("./routes/api/contacts.js");
-const usersRouter = require("./routes/api/users.js");
+const contactsRouter = require("./src/routes/api/contacts.js");
+const usersRouter = require("./src/routes/api/users.js");
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(logger(formatsLogger));
+app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 
@@ -39,5 +40,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server running. Use our API on port: ${process.env.PORT}`);
+  console.log(
+    `Server running. Use our API on port: ${process.env.PORT}`
+  );
 });
