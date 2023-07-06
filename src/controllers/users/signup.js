@@ -36,8 +36,8 @@ const signup = async (req, res, next) => {
       `User with email: ${user.email} was successfully singed up`.success
     );
     res.status(201).json({ message: "Signed up", user });
-  } catch (user) {
-    next(user);
+  } catch (error) {
+    next(error);
   }
 };
 
