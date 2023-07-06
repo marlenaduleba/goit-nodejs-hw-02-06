@@ -2,7 +2,7 @@ const express = require("express");
 const { contacts } = require("../../controllers");
 
 const {
-  authMiddleware,
+  auth,
   contactJoi,
   favoriteJoi,
   isValidId,
@@ -14,14 +14,14 @@ const validFavorite = validation(favoriteJoi);
 
 const router = express.Router();
 
-router.get("/", authMiddleware, contacts.getAll);
-router.get("/:contactId", authMiddleware, isValidId, contacts.getContactById);
-router.post("/", authMiddleware, validContact, contacts.addContact);
-router.delete("/:contactId", authMiddleware, isValidId, contacts.removeContact);
+router.get("/", auth, contacts.getAll);
+router.get("/:contactId", auth, isValidId, contacts.getContactById);
+router.post("/", auth, validContact, contacts.addContact);
+router.delete("/:contactId", auth, isValidId, contacts.removeContact);
 
 router.put(
   "/:contactId",
-  authMiddleware,
+  auth,
   isValidId,
   validContact,
   contacts.updateContact
@@ -29,7 +29,7 @@ router.put(
 
 router.patch(
   "/:contactId/favorite",
-  authMiddleware,
+  auth,
   isValidId,
   validFavorite,
   contacts.updateContactStatus
