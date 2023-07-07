@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const connectDB = require("./config/conn.js");
 const dotenv = require("dotenv");
 const colors = require("colors");
 
@@ -9,9 +10,7 @@ colors.setTheme({
   error: "red",
 });
 
-dotenv.config({ path: "./src/config/config.env" });
-const connectDB = require("./src/config/conn.js");
-connectDB();
+dotenv.config({ path: "./config/config.env" });
 
 const app = express();
 
@@ -21,7 +20,7 @@ const usersRouter = require("./src/routes/api/users.js");
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(logger(formatsLogger));
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 
@@ -39,8 +38,10 @@ app.use((err, req, res, next) => {
   console.error(err.message.error);
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(
-    `Server running. Use our API on port: ${process.env.PORT}`
-  );
+connectDB().then(() => {
+  app.listen(process.env.PORT, () => {
+    console.log(`Server running. Use our API on port: ${process.env.PORT}`);
+  });
 });
+
+module.exports = app;
