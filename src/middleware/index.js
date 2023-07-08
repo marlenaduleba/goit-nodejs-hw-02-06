@@ -16,5 +16,5 @@ module.exports = {
   validation,
   validationFavorite,
   errorValidation,
-  upload
+  upload,
 };
