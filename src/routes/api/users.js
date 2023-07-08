@@ -6,7 +6,7 @@ const {
   validation,
   userJoi,
   subscriptionJoi,
-  upload
+  upload,
 } = require("../../middleware");
 const { users } = require("../../controllers");
 
