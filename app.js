@@ -1,9 +1,12 @@
 const express = require("express");
+const path = require("path");
+const fs = require("fs/promises");
 const logger = require("morgan");
 const cors = require("cors");
 const connectDB = require("./config/conn.js");
 const dotenv = require("dotenv");
 const colors = require("colors");
+const tmpDir = path.join(process.cwd(), "tmp");
 
 colors.setTheme({
   success: "cyan",
@@ -38,8 +41,22 @@ app.use((err, req, res, next) => {
   console.error(err.message.error);
 });
 
+const isAccessible = path => {
+  return fs
+    .access(path)
+    .then(() => true)
+    .catch(() => false);
+};
+
+const createFolderIsNotExist = async folder => {
+  if (!(await isAccessible(folder))) {
+    await fs.mkdir(folder);
+  }
+};
+
 connectDB().then(() => {
   app.listen(process.env.PORT, () => {
+    createFolderIsNotExist(tmpDir);
     console.log(`Server running. Use our API on port: ${process.env.PORT}`);
   });
 });
