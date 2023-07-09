@@ -1,5 +1,5 @@
 const Contact = require("../../models/contact.js");
-const { HttpError } = require("../../helpers");
+const { HttpError } = require("../../helpers/index.js");
 
 const addContact = async (req, res, next) => {
   const { id } = req.user;
