@@ -1,8 +1,12 @@
 const express = require("express");
+const path = require("path");
+const fs = require("fs/promises");
 const logger = require("morgan");
 const cors = require("cors");
+const connectDB = require("./config/conn.js");
 const dotenv = require("dotenv");
 const colors = require("colors");
+const tmpDir = path.join(process.cwd(), "tmp");
 
 colors.setTheme({
   success: "cyan",
@@ -10,17 +14,16 @@ colors.setTheme({
 });
 
 dotenv.config({ path: "./config/config.env" });
-const connectDB = require("./config/conn.js");
-connectDB();
 
 const app = express();
 
-const contactsRouter = require("./routes/api/contacts.js");
-const usersRouter = require("./routes/api/users.js");
+const contactsRouter = require("./src/routes/api/contacts.js");
+const usersRouter = require("./src/routes/api/users.js");
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(logger(formatsLogger));
+app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 
@@ -38,6 +41,24 @@ app.use((err, req, res, next) => {
   console.error(err.message.error);
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server running. Use our API on port: ${process.env.PORT}`);
+const isAccessible = path => {
+  return fs
+    .access(path)
+    .then(() => true)
+    .catch(() => false);
+};
+
+const createFolderIsNotExist = async folder => {
+  if (!(await isAccessible(folder))) {
+    await fs.mkdir(folder);
+  }
+};
+
+connectDB().then(() => {
+  app.listen(process.env.PORT, () => {
+    createFolderIsNotExist(tmpDir);
+    console.log(`Server running. Use our API on port: ${process.env.PORT}`);
+  });
 });
+
+module.exports = app;

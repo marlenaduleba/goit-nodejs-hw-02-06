@@ -4,6 +4,7 @@ const userJoi = Joi.object({
   email: Joi.string().min(3).required().email(),
   password: Joi.string().min(6).max(15).required(),
   subscription: Joi.string(),
+  avatarURL: Joi.string(),
   token: Joi.string(),
 });
 

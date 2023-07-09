@@ -1,5 +1,5 @@
 const User = require("../../models/user.js");
-const { HttpError } = require("../../helpers");
+const { HttpError } = require("../../helpers/index.js");
 
 const updateSubscription = async (req, res, next) => {
   try {
