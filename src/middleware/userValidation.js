@@ -12,4 +12,8 @@ const subscriptionJoi = Joi.object({
   subscription: Joi.string().required().valid("starter", "pro", "business"),
 });
 
-module.exports = { userJoi, subscriptionJoi };
+const emailVerificationJoi = Joi.object({
+  email: Joi.string().min(3).required().email(),
+});
+
+module.exports = { userJoi, subscriptionJoi, emailVerificationJoi };
