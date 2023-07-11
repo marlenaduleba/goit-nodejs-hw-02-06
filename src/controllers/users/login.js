@@ -13,13 +13,13 @@ const login = async (req, res, next) => {
 
     const user = await User.findOne({ email });
 
-    if (!user) {
-      throw new HttpError(401, "Email is wrong");
+    if (!user || !user.verify) {
+      throw new HttpError(401, "Invalid credentials");
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new HttpError(401, "Password is wrong");
+      throw new HttpError(401, "Invalid credentials");
     }
 
     const token = generateToken(user._id);
